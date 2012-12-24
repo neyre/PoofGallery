@@ -1,0 +1,23 @@
+<div class="modal hide fade" id="newAlbum">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>New Album</h3>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-error hide" id='badinfo'><strong>Error!</strong> An Unknown Error Occured</div>
+    <form id=newalbumform class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="input01">Album Name</label>
+          <div class="controls">
+            <input type="text" id='name' class="input-xlarge">
+            <input type="hidden" id='parent' value="{{@PARAMS.album}}">
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" id='submit'>Create</a>
+  </div>
+</div>

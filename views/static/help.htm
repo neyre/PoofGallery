@@ -1,0 +1,109 @@
+<div class='row header'>
+  <div class='pageheader span12'>
+    <h2>
+      <a href="{{@rootpath}}">{{@sitetitle}}</a>
+      <div class="btn-group">
+        <a class="btn btn-primary" href='{{@rootpath}}'><i class="icon-th icon-white"></i> Go Home</a>
+      </div>
+    </h2>
+    <p><blockquote>This website is powered by PoofGallery, a dynamic gallery program designed to keep gallery management with multiple users easy and in control.<br>PoofGallery was developed in 2012 by <a href='http://nickeyre.com' target=_blank>Nick Eyre</a> for <a href='http://team254.com' target=_blank>Team 254 Robotics</a>.</blockquote></p>
+  </div>
+</div>
+
+<div class=row>
+  <div class=span12>
+    <h3>Help Contents</h3>
+    <ul>
+      <li><a href='#users'>Users</a></li>
+      <li><a href='#upload'>Uploading Photos</a></li>
+      <li><a href='#organization'>Photo &amp; Album Organization</a></li>
+      <li><a href='#organize'>Organizing Albums</a></li>
+    </ul>
+
+    <a name=users></a>
+    <h3>Users</h3>
+    <p>To use the PoofGallery back-end, a user must have an account.  There are several levels of account permissions in the software:</p>
+    <ul>
+      <li><strong>Upload Only</strong> users can upload photos to any pre-existing album.  Note that upload only users cannot publish their own photos.</li>
+      <li><strong>Upload &amp; Arrange</strong> users can create, move, rename and delete albums and can upload, move, publish and delete photos.</li>
+      <li><strong>Administrator</strong> users can perform all actions on the website including managing user accounts.</li>
+    </ul>
+    <p>Administrators manage user accounts through the <a href='{{@rootpath}}/users' target=_blank>User Administration Panel</a>.  User accounts can be created, edited or deleted through the panel.  A user cannot delete his or her own account.</p>
+    <p>Any user can change his or her password from a <a href='{{@rootpath}}' target=_blank>gallery page</a> on the site.</p>
+
+    <a name=upload></a>
+    <h3>Uploading Photos</h3>
+    <div class=row>
+      <div class=span8>
+        <p>Any registered user can upload photos to any pre-existing album.  From a <a href='{{@rootpath}}' target=_blank>gallery page</a> on the site, click the <a class="btn btn-primary btn-mini"><i class="icon-plus icon-white"></i> Upload Photos Here</a> button at the top of the page.</p>
+        <p>Once on the upload page, add photos to your upload queue by either dragging them to the page or clicking the <a class="btn btn-success btn-mini"><i class="icon-plus icon-white"></i> Add files...</a> at the top of the page.  Add as many files as desired to the upload queue.</p>
+        <p>Once files are added, the upload queue will appear in a table below, as shown at right.  To start an individual upload, click the <button class="btn btn-mini btn-primary"><i class="icon-upload icon-white"></i> Start</button> button next to an item in the queue.  To start all uploads, click the <button type="submit" class="btn btn-mini btn-primary start"><i class="icon-upload icon-white"></i> Start Upload</button> button at the top of the page.  While the files are being uploaded, progress bars will be shown next to each file.  When the blue button next to a file disappears, the upload has completed.</p>
+      </div>
+      <div class='span4'>
+        <table role="presentation" class="table table-striped thumbnail">
+          <tbody>
+            <tr>
+              <td>Lighthouse.jpg</td>
+              <td>561.28 KB</td>
+              <td><div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div></td>
+              <td><button class="btn btn-mini btn-primary"><i class="icon-upload icon-white"></i> Start</button></td>
+            </tr>
+            <tr>
+              <td>Desert.jpg</td>
+              <td>777.84 KB</td>
+              <td><div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div></td>
+              <td><button class="btn btn-mini btn-primary"><i class="icon-upload icon-white"></i> Start</button></td>
+            </tr>
+            <tr>
+              <td>Penguins.jpg</td>
+              <td>620.89 KB</td>
+              <td><div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div></td>
+              <td><button class="btn btn-mini btn-primary"><i class="icon-upload icon-white"></i> Start</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>Once an upload has been completed, the newly uploaded photos must be published by a user with <em>Upload &amp; Arrange</em> Permissions (see <a href='#organize'>Organizing Albums</a> below).</p>
+
+    <a name=organization></a>
+    <h3>Photo &amp; Album Organization</h3>
+    <p>For uploaded photos to appear in the gallery, they must be published on the organize screen. First, some terminology for the organize screen:</p>
+    <ul>
+      <li><strong>Published Photos</strong> can be viewed by anybody who comes to the site.</li>
+      <li><strong>Highlighted Images</strong> are marked by a <i class="icon-star"></i> on the organize screen.</li>
+      <li><strong>Album Covers</strong> are marked by a <i class="icon-book"></i> on the organize screen.  These albums or photos will show up as the default thumbnail image for the current album.</li>
+      <li><strong>Unpublished Photos</strong> cannot be viewed by anybody without <em>Upload &amp; Arrange</em> Permissions.  Newly uploaded photos are unpublished by default.</li>
+    </ul>
+    <p>The concept of <em>Highlighted Images</em> is somewhat unique to PoofGallery.  By default, only the highlighted and published photos in an album will be visible to site visitors.  However, if there are published but non-highlighted images in a gallery, a visitor can click the <a class='btn btn-mini'>all images</a> link at the bottom of a page to view the remaining images. The purpose of this structure is to allow for galleries with large numbers of photos which have been taken by a number of photographers while allowing site administrators to highlight a set of select images which provide a good overview of the album as to prevent average visitors from digging through hundreds of photos.</p>
+    <p>It is also important to note that any uploaded images, regardless of whether they are published or unpublished, can be viewed and downloaded from their photo URLs.  However, all photo and album URLs are generated from 40-character random SHA-1 hashes, giving 2<sup>160</sup> (more than a trillion trillion trillion trillion) URL possibilites, so it is <em>extremely</em> unlikely that the URL will be guessed.  However, if you are storing incredibly sensitive photos as unpublished photos in your PoofGallery, know that they could <em>in theory</em> be found.</p>
+
+    <a name=organize></a>
+    <h3>Organizing Albums</h3>
+    <p>Now that you've uploaded some photos to your PoofGallery, it's time to publish them so they can be enjoyed by the world.  To organize an album, click the <a class="btn btn-mini btn-success"><i class="icon-th icon-white"></i> Organize Album</a> button at the top of that album's page.</p>
+    <div class=row>
+      <div class="span2 ptile">
+        <li class="thumbnail photo">
+          <img src="{{@rootpath}}/img/0/thumb">
+          <div class="btn-group">
+            <a class="btn"><i class="icon-arrow-down"></i></a>
+            <a class="btn btn-warning"><i class="icon-star"></i></a>
+            <a class="btn btn-success"><i class="icon-book"></i></a>
+          </div>
+        </li>
+      </div>
+      <div class=span10>
+        <p>The organization page for an album consists of a number of <em>tiles</em>, each of which represent a photo or sub-album within the current album.  A sample photo tile is shown at left.  The tiles are broken up into <em>sections</em>, one each for albums, published photos and unpublished photos from each contributing user.</p>
+        <p>Tiles for photos contain toggle buttons with the various actions available for that photo:</p>
+        <ul>
+          <li><strong>Publish</strong> a photo with the <i class="icon-arrow-up"></i> button.  Unpublish it with the <i class="icon-arrow-down"></i> button.</li>
+          <li><strong>Star</strong> a photo with the <i class="icon-star"></i> button.  A yellow-highlighted button indicates that the item has been starred.</li>
+          <li>Make an item the album <strong>cover</strong> with the <i class="icon-book"></i> button.  A green-highlighted button indicates that the item is already the cover.</li>
+        </ul>
+        <p>Furthermore, the tiles within a section can be rearranged by <em>dragging and dropping</em> them into a new order.  Bam!</p>
+        <p>To perform an action to a bunch of tiles at once, select them by clicking on their thumbnails and pick an action from the <a class="btn btn-info btn-mini"><i class="icon-th icon-white"></i> Selected <span class="caret"></span></a> menu.  Hint: there are keyboard shortcuts for select all (<code>a</code>) and deselct all (<code>d</code>).</p>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,30 @@
+<div class="modal hide fade" id="move">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Move Photos</h3>
+  </div>
+  <div class="modal-body">
+    <table class='table table-striped'>
+      <thead>
+        <tr>
+          <th>Album</th>
+          <th>Parent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <repeat group="{{@albumlist}}" value="{{@album}}">
+          <tr>
+            <td>{{@album.title}}</td>
+            <td>
+              {{@album.parent1?(@album.parent1).' &gt;':''}} {{@album.parent0?@album.parent0:'n/a'}}
+              <a class='btn btn-move-select' href='#' id='{{@album.id}}'>Select</a>
+            </td>
+          </tr>
+        </repeat>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn disabled btn-primary" id='submit'>Move</a>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+config.cfg*
+.htaccess*
+!config.cfg.sample
+!.htaccess.sample
+
+*.txt
+*.sql
+
+images/*
+deleted/*
+temp/*
+cache/*

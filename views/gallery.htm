@@ -1,0 +1,100 @@
+<div class='row header'>
+  <check if="{{@GET.format != 'core'}}">
+    <exclude> PAGE TITLE, NAV BUTTONS </exclude>
+    <div class='pageheader span12'>
+      <h2>
+        <a href="{{@rootpath}}">{{@sitetitle}}</a>
+        <div class="btn-group">
+          <check if="{{@SESSION.userAccessLevel > 0}}">
+            <a class="btn btn-inverse" data-toggle="dropdown" href='#'>
+              User <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <check if="{{@SESSION.userAccessLevel > 7}}">
+                <li><a href='{{@rootpath}}/users'>User Administration</a></li>
+              </check>
+              <li><a data-toggle="modal" data-target="#changePass" href='#'>Change Password</a></li>
+              <li><a href='{{@rootpath}}/logout'>Logout</a></li>
+            </ul>
+            <check if="{{@SESSION.userAccessLevel > 4}}">
+              <a class="btn btn-success" href='{{@rootpath}}/{{@PARAMS.album}}/organize'><i class="icon-th icon-white"></i> Organize Album</a>
+            </check>
+            <a class="btn btn-primary" href='{{@rootpath}}/{{@PARAMS.album}}/upload'><i class="icon-plus icon-white"></i> Upload Photos Here</a>
+            <false><a class="btn btn-primary" data-toggle="modal" data-target="#login"><i class="icon-user icon-white"></i> Login</a></false>
+
+          </check>
+        </div>
+      </h2>
+    </div>
+  </check>
+
+  <exclude> BREADCRUMB NAVIGATION </exclude>
+  <div class=span12>
+    <ul class="breadcrumb">
+      <repeat group="{{@breadcrumbs}}" key="{{@id}}" value="{{@name}}">
+        <check if="{{(strval(@id) === @PARAMS.album || strval(@PARAMS.album) === '0') && @partial}}">
+          <true><li class="active">{{@name}}</li></true>
+          <false><check if="{{strlen(@id) == 40}}">
+              <false><li><a href="{{@rootpath}}/">{{@name}}</a> <span class="divider">/</span></li></false>
+              <true><li><a href="{{@rootpath}}/{{@id}}">{{@name}}</a> <span class="divider">/</span></li></true>
+          </check></false>
+        </check>
+      </repeat>
+      <check if="{{!@partial}}">
+        <li class="active">All</li>
+      </check>
+    </ul>
+  </div>
+</div>
+
+<exclude> ALBUM TIILES </exclude>
+<div class=row>
+  <repeat group="{{@albums}}" value="{{@item}}" counter="{{@counter}}">
+    <div class='span3 ptile'>
+      <a href="{{@rootpath}}/{{@item.id}}" class='thumbnail'>
+        <img src="{{@rootpath}}/img/{{@item.albumcover}}/thumb">
+        <true><h5>{{@item.title}}</h5></true>
+      </a>
+    </div>
+    <check if="{{@counter % 4 == 0}}">
+      </div><div class=row>
+    </check>
+  </repeat>
+</div>
+
+<exclude> PHOTO TIILES </exclude>
+<div class='photo row'>
+  <repeat group="{{@photos}}" value="{{@item}}">
+    <div class='span3 ptile'>
+      <a href=# id='{{@item.id}}' class='thumbnail'>
+        <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+      </a>
+    </div>
+  </repeat>
+</div>
+
+<exclude> IF SHOWING PARTIAL ALBUM, SHOW READ MORE LINK </exclude>
+<check if="{{@partial && @hasmoreresults}}">
+<div class=row>
+  <div class=span12>
+    <a href="{{@rootpath}}/{{@PARAMS.album}}/all">
+      <ul class="breadcrumb" style='text-align:center'>
+        Currently showing highlighted images only.  Click here to see all images.
+      </ul>
+    </a>
+  </div>
+</div>
+</check>
+
+<exclude> INCLUDE NECESSARY MODAL SNIPS </exclude>
+<include href="snips/gallery.htm" />
+<check if="{{@SESSION.userAccessLevel < 1}}">
+  <true>
+    <include href="snips/login.htm" />
+    <script src="{{@rootpath}}/static/js/gallery,login"></script>
+  </true>
+  <false>
+    <include href="snips/changePass.htm" />
+    <script src="{{@rootpath}}/static/js/gallery,changePass"></script>
+  </false>
+</check>

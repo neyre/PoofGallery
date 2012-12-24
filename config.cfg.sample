@@ -1,0 +1,27 @@
+[globals]
+
+; Database Host
+dbhost=localhost
+dbname=db_name
+dbuser=db_user
+dbpass=db_pass
+
+; Database Table Prefix
+dbprefix=pg_
+
+; URL Path From Root
+rootpath=/
+
+; Access Level Labels
+access.2=Upload Only
+access.5=Upload & Arrange
+access.8=Administrator
+
+; Misc
+sitetitle=Poof Gallery
+
+; Thumbnail Width, Height
+thumbsize=260,180
+
+; Width of Landscape Image, Height of Portrait Image
+screensize=900,620

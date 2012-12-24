@@ -1,0 +1,135 @@
+/* Page Headers */
+  body {
+    margin-top:8em;
+  }
+  .pageheader .btn-group {
+    float:right;
+  }
+  .row.header {
+    top:0;
+    position:fixed;
+    height:8em;
+    background:white;
+    z-index: 9; 
+  }
+  .row.noheader {
+    margin-top:-8em;
+  }
+
+/* Picture Tiles */
+  .ptile {
+    background:white;
+    margin-bottom:20px;
+  }
+  .ptile .btn-group {
+    margin-top:3px;
+  }
+  .ptile .btn-group .btn {
+    padding:4px;
+  }
+  .ptile li.btn-primary h5 a{
+    color:white;
+  }
+  .ptile .album h5 {
+    height: 2em;
+  }
+
+/* Gallery Modal */
+  .modal-gallery {
+    left:10%;
+    width:80%;
+    margin:0;
+    text-align:center;
+    top:10%!important;
+    max-height: 80%;
+    overflow:hidden;
+    box-shadow: none;
+    border: none;
+    background: none;
+  }
+  .modal-gallery .cell {
+    display:inline-block;
+  }
+  .modal-gallery img {
+    max-height: 80%;
+  }
+  .modal-gallery .overlay {
+    display:none;
+    width:100%;
+    text-align:right;
+  }
+  .modal-gallery .overlay a.action,.modal-gallery .overlay button{
+    color:white;
+    padding: 0 .6em;
+    line-height:2em;
+    opacity:1;
+    font-weight:bold;
+  }
+  .modal-gallery .overlay.top {
+    top:0;
+    opacity:0.5;
+    height:30px;
+    margin-bottom:-30px;
+    background:black;
+  }
+  .modal-gallery .overlay.bottom {
+    bottom:0;
+    opacity:0.5;
+    background:black;
+    height:30px;
+    margin-top:-30px;
+  }
+  .modal-gallery .overlay.center {
+    top:50%;
+    position:absolute;
+  }
+
+/* Loading Buttons */
+  .btn.loading {
+    background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+        color-stop(.25, rgba(0, 0, 0, .10)), 
+        color-stop(.25, transparent),
+        color-stop(.5, transparent), 
+        color-stop(.5, rgba(0, 0, 0, .10)),
+        color-stop(.75, rgba(0, 0, 0, .10)), 
+        color-stop(.75, transparent), 
+        to(transparent));
+    background-image: 
+        -moz-linear-gradient(-45deg, 
+            rgba(0, 0, 0, .10) 25%, 
+            transparent 25%,
+            transparent 50%, rgba(0, 0, 0, .10) 50%, 
+            rgba(0, 0, 0, .10) 75%, 
+            transparent 75%, transparent
+        );
+    background-size: 50px 50px;
+    -moz-background-size: 50px 50px;
+    -webkit-background-size: 50px 50px;
+    -webkit-animation: animate-stripes 2s linear infinite;
+    }
+
+    @-webkit-keyframes animate-stripes {
+      from {
+          background-position: 0 0;
+      } 
+      to {
+         background-position: -50px 0;
+      }
+  }​
+
+/* On anything that's not a phone, */
+/* Allow for an 8 Column Grid      */
+@media (min-width:768px){
+  .row.columns8 {
+    margin-left: -0.8%;
+  }
+  .row.columns8 .ptile {
+    margin-left: 0.8%;
+    margin-bottom: 0.8%;
+    width: 11.7%;
+  }
+}
+
+.modal#move td a.btn {
+  float:right;
+}

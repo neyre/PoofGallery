@@ -1,0 +1,46 @@
+<div class="modal hide fade" id="editUser">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Edit User</h3>
+  </div>
+  <div class="modal-body">
+    <form id=edituserform class="form-horizontal">
+      <div class="alert alert-error hide" id='badpass'><strong>Error!</strong> Passwords Don't Match.</div>
+      <div class="alert alert-error hide" id='badinfo'><strong>Error!</strong> An Unknown Error Occured.</div>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="input01">Username</label>
+          <div class="controls">
+            <input type="text" id='name' disabled class="input-xlarge">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="input01">Password</label>
+          <div class="controls">
+            <input type="password" id='password' class="input-xlarge">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="input01">Confirm Password</label>
+          <div class="controls">
+            <input type="password" id='password2' class="input-xlarge">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="input01">Access Level</label>
+          <div class="controls">
+            <select id='access'>
+              <repeat group="{{@access}}" key="{{@key}}" value="{{@label}}">
+                <option value="{{@key}}">{{@label}}</option>
+              </repeat>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-danger" id='delete'>Delete</a>
+    <a href="#" class="btn btn-primary" id='submit'>Update</a>
+  </div>
+</div>

@@ -1,0 +1,117 @@
+<div class='row header'>
+  <exclude> PAGE TITLE, NAV BUTTONS </exclude>
+  <div class='pageheader span12'>
+    <h2>
+      <a href="{{@rootpath}}" class='pagetitle' id='{{@PARAMS.album}}'>{{@sitetitle}}</a>
+      <div class="btn-group">
+          <a class="btn btn-info selected-actions disabled" data-toggle="dropdown" href='#'><i class="icon-th icon-white"></i> Selected <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a class='btn-star-selected' href='#'>Star</a></li>
+            <li><a class='btn-unstar-selected' href='#'>Remove Star</a></li>
+            <li><a class='btn-publish-selected' href='#'>Publish</a></li>
+            <li><a class='btn-unpublish-selected' href='#'>Unpublish</a></li>
+            <li class="divider"></li>
+            <li><a class='btn-move' href='#' data-toggle="modal" data-target="#move">Move</a></li>
+            <li><a class='btn-delete' href='#'>Delete</a></li>
+            <li class="divider"></li>
+            <li><a class='btn-deselect-all' href='#'>Deselect All</a></li>
+          </ul>
+        <check if="{{@PARAMS.album}}"><a class='btn btn-rename' href='#' data-toggle="modal" data-target="#rename"><i class='icon-edit'></i> Rename Album</a>
+        </check>
+        <a class='btn btn-inverse' href='upload'><i class="icon-plus icon-white"></i> Upload Here</a>
+        <a class="btn btn-success" href='#' data-toggle="modal" data-target="#newAlbum"><i class="icon-folder-open icon-white"></i> New Album</a>
+        <a class="btn btn-warning btn-reset" href='#'><i class="icon-refresh icon-white"></i> Reset</a>
+        <a class="btn btn-primary btn-save" href='#'><i class="icon-download-alt icon-white"></i> Save</a>
+      </div>
+    </h2>
+  </div>
+
+  <exclude> BREADCRUMB NAVIGATION </exclude>
+  <div class=span12>
+    <ul class="breadcrumb">
+      <repeat group="{{@breadcrumbs}}" key="{{@id}}" value="{{@name}}">
+          <check if="{{strlen(@id) == 40}}">
+            <false><li><a href="{{@rootpath}}/">{{@name}}</a> <span class="divider">/</span></li></false>
+            <true><li><a href="{{@rootpath}}/{{@id}}">{{@name}}</a> <span class="divider">/</span></li></true>
+        </check>
+      </repeat>
+      <li class="active">Organize</li>
+    </ul>
+  </div>
+</div>
+
+<exclude> PUBLISHED ALBUM GRID TIILES </exclude>
+<check if="{{count(@albums) > 0}}">
+  <div class=row><div class=span12><h4>Albums</h4></div></div>
+  <div class=row id=albums>
+    <repeat group="{{@albums}}" value="{{@item}}">
+
+      <exclude> Create Tile </exclude>
+      <div class='span2 ptile' id=1>
+        <li class='thumbnail album {{@item.id==@albumcover?'thumb':''}}' id='{{@item.id}}'>
+          <img src="{{@rootpath}}/img/{{@item.albumcover}}/thumb">
+          <h5><a href='{{@rootpath}}/{{@item.id}}/organize'>{{@item.title}}</a></h5>
+          <check if="{{@PARAMS.album}}">
+            <div class="btn-group">
+              <a class='btn btn-thumb {{@item.id==@albumcover?'btn-success':''}}' href='#'><i class="icon-book"></i></a>
+            </div>
+          </check>
+        </li>
+      </div>
+    </repeat>
+  </div>
+</check>
+
+<exclude> PUBLISHED PHOTO GRID TIILES </exclude>
+<div class=row><div class=span12><h4>Published Photos</h4></div></div>
+<div class='row columns8' id=photos>
+  <repeat group="{{@photos}}" value="{{@item}}">
+
+    <exclude> Create Tile </exclude>
+    <div class='span2 ptile' user="{{@item.creator}}">
+      <li class="thumbnail photo {{@item.starred?'star':''}} pub {{@item.id==@albumcover?'thumb':''}}" id='{{@item.id}}'>
+        <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+        <div class="btn-group">
+          <a class='btn btn-pub' href='#'><i class="icon-arrow-down"></i></a>
+          <a class="btn btn-star {{@item.starred?'btn-warning':''}}" href='#'><i class="icon-star"></i></a>
+          <check if="{{@PARAMS.album}}">
+            <a class='btn btn-thumb {{@item.id==@albumcover?'btn-success':''}}' href='#'><i class="icon-book"></i></a>
+          </check>
+        </div>
+      </li>
+    </div>
+  </repeat>
+</div>
+
+<exclude> UNPUBLISHED PHOTO GRID TIILES </exclude>
+<check if="{{count(@unpublished) > 0}}">
+  <repeat group="{{@unpublished}}" key="{{@username}}" value="{{@items}}">
+    <div class=row><div class=span12><h4>Unpublished Photos for User: {{@username}}</h4></div></div>
+    <div class='row columns8' user='{{@username}}'>
+      <repeat group="{{@items}}" value="{{@item}}" counter="{{@counter}}">
+
+        <exclude> Create Tile </exclude>
+        <div class='span2 ptile' user='{{@username}}'>
+          <li class="thumbnail photo {{@item.starred?'star':''}}" id='{{@item.id}}'>
+            <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+            <div class="btn-group">
+              <a class='btn btn-pub' href='#'><i class="icon-arrow-up"></i></a>
+              <a class="btn btn-star {{@item.starred?'btn-warning':''}}" href='#'><i class="icon-star"></i></a>
+              <check if="{{@PARAMS.album}}">
+                <a class='btn btn-thumb hide' href='#'><i class="icon-book"></i></a>
+              </check>
+            </div>
+          </li>
+        </div>
+      </repeat>
+    </div>
+  </repeat>
+</check>
+
+<include href="snips/newAlbum.htm" />
+<include href="snips/move.htm" />
+<check if="{{@PARAMS.album}}">
+  <include href="snips/rename.htm" />
+</check>
+
+<script src="{{@rootpath}}/static/js/organize,newAlbum,rename"></script>

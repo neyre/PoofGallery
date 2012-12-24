@@ -1,0 +1,72 @@
+<div class='row header'>
+
+  <exclude> PAGE TITLE, NAV BUTTONS </exclude>
+  <div class='pageheader span12'>
+    <h2>
+      <a href="{{@rootpath}}">{{@sitetitle}}</a>
+      <div class="btn-group">
+        <a class="btn btn-inverse" data-toggle="dropdown" href='#'>
+          User <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="modal" data-target="#changePass" href='#'>Change Password</a></li>
+          <li><a href='{{@rootpath}}/logout'>Logout</a></li>
+        </ul>
+        <a class="btn btn-primary" data-toggle="modal" data-target="#newUser"><i class="icon-user icon-white"></i> New User</a>
+      </div>
+    </h2>
+  </div>
+
+  <exclude> BREADCRUMB NAVIGATION </exclude>
+  <div class=span12>
+    <ul class="breadcrumb">
+      <li><a href="{{@rootpath}}/">{{@sitetitle}}</a> <span class="divider">/</span></li>
+      <li class="active">User Administration</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class=row>
+  <div class=span9>
+    <exclude> USER TABLE </exclude>
+    <table class='table table-bordered table-striped'>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Access Level</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <repeat group="{{@users}}" value="{{@item}}">
+          <tr>
+            <td>{{@item.username}}</td>
+            <td>{{@item.access}}</td>
+            <td>
+              <check if="{{@item.username != @SESSION.username}}">
+                <a href='#' class='edit user' username="{{@item.username}}" access="{{@item.access}}">Edit</a>
+              </check>
+            </td>
+          </tr>
+        </repeat>
+      </tbody>
+    </table>
+  </div>
+  <div class='span3'>
+    <div class=well>
+      <h5>Access Levels</h5>
+      <ul class=unstyled>
+        <repeat group="{{@access}}" key="{{@key}}" value="{{@label}}">
+          <li><strong>{{@key}}</strong> - {{@label}}</li>
+        </repeat>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<include href="snips/userNew.htm" />
+<include href="snips/userEdit.htm" />
+<include href="snips/changePass.htm" />
+
+<script src="{{@rootpath}}/static/js/userNew,userEdit,changePass"></script>

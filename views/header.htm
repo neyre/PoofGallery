@@ -1,0 +1,18 @@
+<check if="{{@GET.format != 'core'}}">
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{{@rootpath}}/static/css">
+    <title>
+      <check if="{{@pagetitle}}">
+        <true>{{@pagetitle}} | {{@sitetitle}}</true>
+        <false>{{@sitetitle}}</false>
+      </check>
+    </title>
+  </head>
+  <body>
+    <img src='{{@rootpath}}/static/glyphicons-halflings-white.png' style='display:none;'>
+    <img src='{{@rootpath}}/static/glyphicons-halflings.png' style='display:none;'>
+    <div class=container>
+</check>
