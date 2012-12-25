@@ -11,7 +11,7 @@
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
 // 
-// Version 1.0.0
+// Version 1.0.1
 
 class Statics{
 

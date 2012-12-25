@@ -11,7 +11,7 @@
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
 // 
-// Version 1.0.0
+// Version 1.0.1
 
 class Item{
 
@@ -49,6 +49,17 @@ class Item{
       foreach($cacheVariables as $var)
         $cacheData[$var] = F3::get($var);
       F3::set(F3::get('partial').F3::get('PARAMS.album'),$cacheData,true);
+    }
+
+    // Show Total Item Count in Footer (if Config Allows)
+    if(F3::get('showtotals')){
+      $item = new Axon(F3::get('dbprefix').'items');
+      $item->def('count','COUNT(id)');
+      $item->load('published=1 AND album=0');
+      $photos = $item->count;
+      $item->load('album=1');
+      $albums = $item->count;
+      F3::set('itemcount',$photos.' Photos in '.$albums.' Albums.');
     }
 
     echo Template::serve('header.htm');

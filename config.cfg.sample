@@ -25,3 +25,6 @@ thumbsize=260,180
 
 ; Width of Landscape Image, Height of Portrait Image
 screensize=900,620
+
+; Show Total Album and Photo Count in Footer
+showtotals=true

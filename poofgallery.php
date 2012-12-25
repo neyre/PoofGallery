@@ -10,7 +10,7 @@
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
 // 
-// Version 1.0.0
+// Version 1.0.1
 
 // INCLUDE FRAMEWORK
 require __DIR__.'/lib_fatfree/base.php';
