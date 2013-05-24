@@ -1,16 +1,16 @@
 <?php
 
 // PoofGallery
-// 
+//
 // The contents of this file are subject to the terms of the GNU General
 // Public License Version 3.0. You may not use this file except in
 // compliance with the license. Any of the license terms and conditions
 // can be waived if you get permission from the copyright holder.
-// 
+//
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
-// 
-// Version 1.0.1
+//
+// Version 2.0.0
 
 // INCLUDE FRAMEWORK
 require __DIR__.'/lib_fatfree/base.php';
@@ -27,29 +27,35 @@ F3::set('DB',new DB('mysql:host='.F3::get('dbhost').';dbname='.F3::get('dbname')
 $cacheStatic = 86400; // Time to Cache Static Pages
 
 // UNCOMMENT TO DEBUG
-// F3::set('SYNC',0);
-// F3::set('DEBUG',2);
-// F3::set('CACHE',FALSE);
-// $cacheStatic = 0;
+F3::set('SYNC',0);
+F3::set('DEBUG',2);
+F3::set('CACHE',FALSE);
+$cacheStatic = 0;
+
+// GET USER ACCESS LEVEL
+$session = new Axon(F3::get('dbprefix').'sessions');
+$session->load(array('id=:id AND expires>:exp',array(':id'=>F3::get('COOKIE.pg_session'),':exp'=>time())));
+if(!$session->dry()){
+  F3::set('username',$session->username);
+  F3::set('userAccessLevel',$session->access);
+}
 
 // PUBLIC ROUTES
 F3::route('GET  /',                'Item::viewAlbumPartial');
 F3::route('GET  /@album',          'Item::viewAlbumPartial');
 F3::route('GET  /@album/all',      'Item::viewAlbum');
-F3::route('GET  /img/@id',         'Item::downloadImage');
-F3::route('GET  /img/@id/@size',   'Item::viewImage');
 F3::route('POST /login',           'User::login');
 F3::route('GET  /logout',          'User::logout');
 
 // UPLOADER ROUTES
-if(F3::get('SESSION.userAccessLevel') > 1){
+if(F3::get('userAccessLevel') > 1){
   F3::route('GET  /@album/upload',   'Item::viewAlbumUpload');
   F3::route('POST /@album/upload',   'Item::recieveUpload');
   F3::route('POST /users/password',  'User::updatePassword');
 }
 
 // ARRANGER ROUTES
-if(F3::get('SESSION.userAccessLevel') > 4){
+if(F3::get('userAccessLevel') > 4){
   F3::route('GET  /@album/organize', 'Item::viewAlbumOrganize');
   F3::route('POST /album/new',       'Item::createAlbum');
   F3::route('POST /album/rename',    'Item::renameAlbum');
@@ -59,7 +65,7 @@ if(F3::get('SESSION.userAccessLevel') > 4){
 }
 
 // ADMIN ROUTES
-if(F3::get('SESSION.userAccessLevel') > 7){
+if(F3::get('userAccessLevel') > 7){
   F3::route('GET  /users',           'User::view');
   F3::route('POST /users/new',       'User::create');
   F3::route('POST /users/update',    'User::update');
@@ -68,12 +74,13 @@ if(F3::get('SESSION.userAccessLevel') > 7){
 }
 
 // STATIC ROUTES (Cache for 1 Day)
-F3::route('GET /static/css',       'Statics::css',        $cacheStatic);
-F3::route('GET /static/js/core',   'Statics::jsCore',     $cacheStatic);
-F3::route('GET /static/js/upload', 'Statics::jsUpload',   $cacheStatic);
-F3::route('GET /static/js/@file',  'Statics::jsFile',     $cacheStatic);
-F3::route('GET /static/@file',     'Statics::staticFile', $cacheStatic);
-F3::route('GET /help',             'Statics::help',       $cacheStatic);
+F3::route('GET /static/css',       'Statics::css',              $cacheStatic);
+F3::route('GET /static/js/core',   'Statics::jsCore',           $cacheStatic);
+F3::route('GET /static/js/upload', 'Statics::jsUpload',         $cacheStatic);
+F3::route('GET /static/js/@file',  'Statics::jsFile',           $cacheStatic);
+F3::route('GET /static/@file',     'Statics::staticFile',       $cacheStatic);
+F3::route('GET /help',             'Statics::help',             $cacheStatic);
+F3::route('GET /blank',            'Statics::placeholderImage', $cacheStatic);
 
 // CHECK FOR INSTALL FILE
 if(file_exists('install.php') && F3::get('DEBUG') == 0)
@@ -90,5 +97,5 @@ function clearCache(){
     unlink($v);
   echo 'The Cache has been Cleared';
 }
-  
+
 ?>

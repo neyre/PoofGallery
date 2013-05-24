@@ -2,10 +2,10 @@
   <script src="{{@rootpath}}/static/js/core"></script>
   <check if="{{@upload}}"><script src="{{@rootpath}}/static/js/upload"></script></check>
 
-  <check if="{{@SESSION.userAccessLevel}}">
+  <check if="{{@userAccessLevel}}">
     <div class=row>
       <div class=span12 style='text-align:center;'>
-        <a href='{{@rootpath}}/help' target='_blank'>PoofGallery Help</a> 
+        <a href='{{@rootpath}}/help' target='_blank'>PoofGallery Help</a>
       </div>
     </div>
   </check>

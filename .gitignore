@@ -1,5 +1,6 @@
 config.cfg*
 .htaccess*
+.afignore
 !config.cfg.sample
 !.htaccess.sample
 
@@ -10,3 +11,5 @@ images/*
 deleted/*
 temp/*
 cache/*
+
+*.bat

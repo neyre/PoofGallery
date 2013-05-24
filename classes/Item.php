@@ -2,16 +2,16 @@
 
 // PoofGallery
 // Item (Photos & Albums) Class
-// 
+//
 // The contents of this file are subject to the terms of the GNU General
 // Public License Version 3.0. You may not use this file except in
 // compliance with the license. Any of the license terms and conditions
 // can be waived if you get permission from the copyright holder.
-// 
+//
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
-// 
-// Version 1.0.1
+//
+// Version 2.0.0
 
 class Item{
 
@@ -64,7 +64,7 @@ class Item{
 
     echo Template::serve('header.htm');
     echo Template::serve('gallery.htm');
-    echo Template::serve('footer.htm');    
+    echo Template::serve('footer.htm');
   }
 
   // Show Partial Album (GET)
@@ -104,85 +104,11 @@ class Item{
     echo Template::serve('footer.htm');
   }
 
-  // Image Download (GET)
-  // Sends Image Download as JPG
-  static function downloadImage(){
-    // Add Extension
-    if(!stristr(F3::get('PARAMS.id'),'.jpg'))
-      F3::reroute('/img/'.F3::get('PARAMS.id').'.jpg');
-
-    // Send Download and Provide 404 if Can't Find Image
-    if (!F3::send('../images/'.F3::get('PARAMS.id')))
-      F3::error(404);
-  }
-
-  // Show Image (Scaled) (GET)
-  // Shows image as thumbnail or screen size
-  // Caches it as Variable until Cache Cleared
-  static function viewImage(){
-    // header('Content-Type: image/jpeg');
-    $size = F3::get('PARAMS.size');
-    if($size != 'thumb')
-      $size = 'screen';
-    $id = F3::get('PARAMS.id');
-
-    // Define Image Sizes (From Config)
-    $thumb = F3::get('thumbsize');
-    $screen = F3::get('screensize');
-
-    // If Cached, Retrieve from Cache & End Script Execution
-    if(F3::cached($size.$id))
-      die(F3::get($size.$id));
-
-    // If file doesn't exist but ID is an album, track down its cover
-    if(!file_exists('../images/'.$id.'.jpg') && strlen($id) == 40){
-      $item = new Axon(F3::get('dbprefix').'items');
-      $item->load(array('id=:id AND published=1 AND album=1',array(':id'=>$id)));
-      while($item->album && $item->albumcover){
-        $item->load(array('id=:id AND published=1',array(':id'=>$item->albumcover)));
-        $id = $item->id;
-      }
-    }
-
-    // If File Exists, Generate Thumbnail
-    if(file_exists('../images/'.$id.'.jpg')){
-
-      // Create Resizer Object
-      include('../lib_phpthumb/ThumbLib.inc.php');
-      $resizeroptions = array('resizeUp' => false, 'jpegQuality' => 80, 'preserveAlpha' => false);
-      try{
-        $img = PhpThumbFactory::create('../images/'.$id.'.jpg', $resizeroptions);
-      }catch (Exception $e){}
-
-      // Crop Resize Thumbnails
-      if($size == 'thumb')
-        $img->adaptiveResize($thumb[0],$thumb[1]);
-
-      // Resize Screen Images Without Cropping
-      else{
-        $dims = $img->getCurrentDimensions();
-        if($dims['width'] < $dims['height'])
-          $img->resize($screen[1],$screen[1]); // Portrait
-        else
-          $img->resize($screen[0],$screen[0]); // Landscape
-      }
-
-      // Show Image and Cache
-      $img = $img->getImageAsString();
-      F3::set($size.$id,$img,true);
-      die($img);
-
-    // If file doesn't exist, show fake thumbnail
-    }else{
-      Graphics::fakeimage($thumb[0],$thumb[1]);
-    }
-  }
-
   // Create Album (POST)
   // Returns Nothing if Success, 404 if Data Validation Fails
   static function createAlbum(){
     // Validate Input
-    if(strlen(F3::get('POST.name')) < 1 || (strlen(F3::get('POST.parent')) != 1 && strlen(F3::get('POST.parent')) != 40)) 
+    if(strlen(F3::get('POST.name')) < 1 || (strlen(F3::get('POST.parent')) != 1 && strlen(F3::get('POST.parent')) != 40))
       F3::error(404);
 
     // Create Album
@@ -208,7 +134,7 @@ class Item{
     for($i=0;$i<(count($_FILES['files']['name']));$i++){
       // If No Errors and File is JPEG
       if($_FILES['files']['error'][$i] == 0 && in_array(self::getExtension($_FILES['files']['name'][$i]),array('jpg','jpeg'))){
-        
+
         // Create Item
         $item = self::createItem();
         $item->parent = F3::get('PARAMS.album');
@@ -227,10 +153,55 @@ class Item{
         $status['size'] = $_FILES['files']['size'][$i];
 
         // Move File, Save in Database, Push to Status Array
-        if(move_uploaded_file($_FILES['files']['tmp_name'][$i], '../images/'.$item->id.'.jpg')){
-          $item->save();
-          array_push($results,$status);
+        if(!move_uploaded_file($_FILES['files']['tmp_name'][$i], F3::get('mediauploadpath').$item->id.'.jpg'))
+          die('Permission Error');
+
+        // Create Resizer Object (Include Path Requires a Leading Slash on Windows)
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+          include('lib_phpthumb/ThumbLib.inc.php');
+        else
+          include('lib_phpthumb/ThumbLib.inc.php');
+        $resizeroptions = array('resizeUp' => false, 'jpegQuality' => 80, 'preserveAlpha' => false);
+        try{
+          $img = PhpThumbFactory::create(F3::get('mediauploadpath').$item->id.'.jpg', $resizeroptions);
+        }catch (Exception $e){}
+
+        // Resize Screen Images Without Cropping
+        $dims = $img->getCurrentDimensions();
+        if($dims['width'] < $dims['height'])
+          $img->resize(F3::get('screensize.1'),F3::get('screensize.1')); // Portrait
+        else
+          $img->resize(F3::get('screensize.0'),F3::get('screensize.0')); // Landscape
+        $img->save(F3::get('mediauploadpath').$item->id.'-screen.jpg','JPG');
+
+        // Crop Resize Thumbnails & Save
+        $img->adaptiveResize(F3::get('thumbsize.0'),F3::get('thumbsize.1'));
+        $img->save(F3::get('mediauploadpath').$item->id.'-thumb.jpg','JPG');
+
+        // POST Uploads to Another Server
+        if(F3::get('postupload')){
+          $post_data['dir'] = F3::get('postdir');
+          $post_data['secret'] = F3::get('postsecret');
+          $post_data['count'] = 3;
+          $post_data['file0'] = '@'.dirname(__DIR__).'/'.F3::get('mediauploadpath').$item->id.'-thumb.jpg';
+          $post_data['file1'] = '@'.dirname(__DIR__).'/'.F3::get('mediauploadpath').$item->id.'-screen.jpg';
+          $post_data['file2'] = '@'.dirname(__DIR__).'/'.F3::get('mediauploadpath').$item->id.'.jpg';
+          $ch = curl_init();
+
+          curl_setopt($ch, CURLOPT_URL, F3::get('posturl'));
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_VERBOSE, 1);   // Debug
+          $out = curl_exec($ch);
+
+          unlink(F3::get('mediauploadpath').$item->id.'-thumb.jpg');
+          unlink(F3::get('mediauploadpath').$item->id.'-screen.jpg');
+          unlink(F3::get('mediauploadpath').$item->id.'.jpg');
         }
+
+        // Save in Database
+        $item->save();
+        array_push($results,$status);
       }
       // Return Status Array
       echo json_encode($results);
@@ -296,23 +267,24 @@ class Item{
       // Load New Cover in Database
       $item->load(array('id=:id AND published=1',array(':id'=>F3::get('POST.albumcover'))));
       $parent = $item->parent;
-      $albumcover = $item->id;
+
+      if($item->album){
+        $albumcover = $item->albumcover;
+        $albumcoverparent = $item->id;
+      }else{
+        $albumcover = $item->id;
+        $albumcoverparent = 0;
+      }
 
       // Load Album in Database, Update Cover if Changed & Clear Cached View of Parent Album
       if(!$item->dry()){
         $item->load(array('id=:id AND album=1',array(':id'=>$parent)));
-        if($item->albumcover != $albumcover){
+        if($item->albumcover != $albumcover || $item->albumcoverparent != $albumcoverparent){
           $item->albumcover = $albumcover;
+          $item->albumcoverparent = $albumcoverparent;
           $item->save();
           self::clearCache($item->parent);
         }
-      }
-
-      // Clear Cached Thumbnails of Things that have this album as their cover
-      $item->load(array('albumcover=:id',array(':id'=>$albumcover)));
-      while(!$item->dry()){
-        self::clearCache($item->id);
-        $item->load(array('albumcover=:id',array(':id'=>$item->id)));
       }
     }
 
@@ -376,7 +348,8 @@ class Item{
     // If Photo, Clear Thumbnails & Move Photo from Photos to Deleted Folder
     }else{
       self::clearCache($item->id);
-      rename('../images/'.$item->id.'.jpg','../deleted/'.$item->id.'.jpg');
+      if(file_exists(F3::get('mediauploadpath').$item->id.'.jpg'))
+        rename(F3::get('mediauploadpath').$item->id.'.jpg',F3::get('mediauploadpath').'deleted/'.$item->id.'.jpg');
     }
 
     // Remove from Database
@@ -396,6 +369,7 @@ class Item{
         F3::set('PARAMS.album','0');
       F3::set('pagetitle',$album->title);
       F3::set('albumcover',$album->albumcover);
+      F3::set('albumcoverparent',$album->albumcoverparent);
     }
 
     // Build Breadcrumbs
@@ -435,13 +409,14 @@ class Item{
 
     // Create & Return New Item
     $item->reset();
-    $item->id           = $id;
-    $item->creator      = F3::get('SESSION.username');
-    $item->title        = '';
-    $item->albumcover   = 0;
-    $item->published    = 0;
-    $item->starred      = 0;
-    $item->displayorder = time();
+    $item->id               = $id;
+    $item->creator          = F3::get('SESSION.username');
+    $item->title            = '';
+    $item->albumcover       = 0;
+    $item->albumcoverparent = 0;
+    $item->published        = 0;
+    $item->starred          = 0;
+    $item->displayorder     = time();
     return $item;
   }
 
@@ -478,8 +453,6 @@ class Item{
 
   // Clear Cached Items of Given ID
   static function clearCache($id){
-    F3::clear('thumb'.$id);  // Thumbnails
-    F3::clear('screen'.$id); // Screen Images
     F3::clear($id);          // Album View (Full)
     F3::clear('1'.$id);      // Album View (Partial)
   }

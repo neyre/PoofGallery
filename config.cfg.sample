@@ -10,7 +10,22 @@ dbpass=db_pass
 dbprefix=pg_
 
 ; URL Path From Root
-rootpath=/
+rootpath=http://gallery.com
+
+; Login Length (Seconds)
+logintime = 3600
+
+; Image Location (URL)
+fullmediapath=/images
+
+; Image Location (Relative to index.php)
+mediauploadpath=images/
+
+; POST Uploads To Another Server
+postupload=false
+posturl=http://another.server.com/
+postsecret=abcde
+postdir=gallery/
 
 ; Access Level Labels
 access.2=Upload Only

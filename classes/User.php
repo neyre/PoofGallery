@@ -2,16 +2,16 @@
 
 // PoofGallery
 // User Acconts & Authentication Class
-// 
+//
 // The contents of this file are subject to the terms of the GNU General
 // Public License Version 3.0. You may not use this file except in
 // compliance with the license. Any of the license terms and conditions
 // can be waived if you get permission from the copyright holder.
-// 
+//
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
-// 
-// Version 1.0.1
+//
+// Version 2.0.0
 
 class User{
 
@@ -52,7 +52,7 @@ class User{
   // Returns Nothing if Success, 404 if Fail
   static function update(){
     // Check that is not Current User
-    if(!strlen(F3::get('POST.name')) || F3::get('POST.name') == F3::get('SESSION.username'))
+    if(!strlen(F3::get('POST.name')) || F3::get('POST.name') == F3::get('username'))
       F3::error(404);
 
     // Load Existing User
@@ -77,7 +77,7 @@ class User{
 
     // Retrieve Record & Update Password
     $user = new Axon(F3::get('dbprefix').'users');
-    $user->load(array('username=:id',array(':id'=>F3::get('SESSION.username'))));
+    $user->load(array('username=:id',array(':id'=>F3::get('username'))));
     self::setPassword($user);
     $user->save();
   }
@@ -86,7 +86,7 @@ class User{
   // Returns Nothing if Success, 404 if Fail
   static function delete(){
     // If Username Set and Not Current User
-    if(strlen(F3::get('POST.name')) && F3::get('POST.name') != F3::get('SESSION.username')){
+    if(strlen(F3::get('POST.name')) && F3::get('POST.name') != F3::get('username')){
       // Load Existing User
       $user = new Axon(F3::get('dbprefix').'users');
       $user->load(array('username=:id',array(':id'=>F3::get('POST.name'))));
@@ -113,14 +113,28 @@ class User{
       F3::error(404);
 
     // Create Session
-    F3::set('SESSION.username',$user->username);
-    F3::set('SESSION.userAccessLevel',$user->access);
+    $session = new Axon(F3::get('dbprefix').'sessions');
+    $session->id       = sha1(mcrypt_create_iv(12,MCRYPT_DEV_URANDOM));
+    $session->start    = time();
+    $session->expires  = time() + F3::get('logintime');
+    $session->username = $user->username;
+    $session->access   = $user->access;
+    $session->save();
+
+    setcookie('pg_session', $session->id, $session->expires);
   }
 
   // Log Out Current User (GET)
   // Clears session & redirects User to Homepage Upon Complete
   static function logout(){
-    F3::clear('SESSION');
+    // Clear Session in Database
+    $session = new Axon(F3::get('dbprefix').'sessions');
+    $session->load(array('id=:id OR expires<:time',array(':id'=>F3::get('COOKIE.pg_session'),':time'=>time())));
+    if(!$session->dry())
+      $session->erase();
+
+    // Clear Cookie & Redirect
+    setcookie('pg_session', 0, 0);
     F3::reroute('/');
   }
 

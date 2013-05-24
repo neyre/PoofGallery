@@ -1,7 +1,7 @@
 <?php
 if(isset($_POST['username'])){
-  require '../lib_fatfree/base.php';
-  F3::config('../config.cfg');
+  require 'lib_fatfree/base.php';
+  F3::config('config.cfg');
 
   $username = F3::get('POST.username');
   $salt     = sha1(mcrypt_create_iv(16));
@@ -26,6 +26,7 @@ if(isset($_POST['username'])){
         `parent` varchar(40) NOT NULL DEFAULT '0',
         `title` varchar(256) DEFAULT NULL,
         `albumcover` varchar(40) DEFAULT NULL,
+        `albumcoverparent` varchar(40) NOT NULL DEFAULT '0',
         `starred` tinyint(1) NOT NULL DEFAULT '0',
         `creator` varchar(40) NOT NULL,
         `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -49,7 +50,7 @@ if(isset($_POST['username'])){
   if(!$q)
     die('Could not create user table');
 
-  $q = mysql_query("CREATE VIEW `".$prefix."albumlist` 
+  $q = mysql_query("CREATE VIEW `".$prefix."albumlist`
         AS SELECT
         a.id AS id,
         a.title AS title,
@@ -73,6 +74,17 @@ if(isset($_POST['username'])){
 
   if(!$q)
     die('Could not create admin user.');
+
+  $q = mysql_query("CREATE TABLE IF NOT EXISTS `".$prefix."sessions` (
+    `id` varchar(40) NOT NULL,
+    `username` varchar(40) NOT NULL,
+    `access` int(11) NOT NULL,
+    `start` int(12) NOT NULL,
+    `expires` int(12) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+  if(!$q)
+    die('Could not create sessions table');
 
   $success = true;
 }

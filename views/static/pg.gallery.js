@@ -14,8 +14,8 @@ $('.row.photo a.thumbnail').click(function(event){
 
 function showPicture(id){
   $('.modal-gallery').modal();
-  $('.modal-gallery img').attr('src','{{@rootpath}}/img/'+id+'/screen');
-  $('.modal-gallery a.dl').attr('href','{{@rootpath}}/img/'+id);
+  $('.modal-gallery img').attr('src','{{@fullmediapath}}/'+id+'-screen.jpg');
+  $('.modal-gallery a.dl').attr('href','{{@fullmediapath}}/'+id+'.jpg');
 
   window.location.hash = id;
 

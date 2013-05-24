@@ -48,12 +48,15 @@
 
       <exclude> Create Tile </exclude>
       <div class='span2 ptile' id=1>
-        <li class='thumbnail album {{@item.id==@albumcover?'thumb':''}}' id='{{@item.id}}'>
-          <img src="{{@rootpath}}/img/{{@item.albumcover}}/thumb">
+        <li class='thumbnail album {{(@item.id==@albumcover || @item.id==@albumcoverparent)?'thumb':''}}' id='{{@item.id}}'>
+          <check if="{{@item.albumcover}}">
+            <false><img src="{{@rootpath}}/blank"></false>
+            <true><img src="{{@fullmediapath}}/{{@item.albumcover}}-thumb.jpg"></true>
+          </check>
           <h5><a href='{{@rootpath}}/{{@item.id}}/organize'>{{@item.title}}</a></h5>
           <check if="{{@PARAMS.album}}">
             <div class="btn-group">
-              <a class='btn btn-thumb {{@item.id==@albumcover?'btn-success':''}}' href='#'><i class="icon-book"></i></a>
+              <a class='btn btn-thumb {{(@item.id==@albumcover || @item.id==@albumcoverparent)?'btn-success':''}}' href='#'><i class="icon-book"></i></a>
             </div>
           </check>
         </li>
@@ -70,7 +73,7 @@
     <exclude> Create Tile </exclude>
     <div class='span2 ptile' user="{{@item.creator}}">
       <li class="thumbnail photo {{@item.starred?'star':''}} pub {{@item.id==@albumcover?'thumb':''}}" id='{{@item.id}}'>
-        <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+        <img src="{{@fullmediapath}}/{{@item.id}}-thumb.jpg">
         <div class="btn-group">
           <a class='btn btn-pub' href='#'><i class="icon-arrow-down"></i></a>
           <a class="btn btn-star {{@item.starred?'btn-warning':''}}" href='#'><i class="icon-star"></i></a>
@@ -93,7 +96,7 @@
         <exclude> Create Tile </exclude>
         <div class='span2 ptile' user='{{@username}}'>
           <li class="thumbnail photo {{@item.starred?'star':''}}" id='{{@item.id}}'>
-            <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+            <img src="{{@fullmediapath}}/{{@item.id}}-thumb.jpg">
             <div class="btn-group">
               <a class='btn btn-pub' href='#'><i class="icon-arrow-up"></i></a>
               <a class="btn btn-star {{@item.starred?'btn-warning':''}}" href='#'><i class="icon-star"></i></a>

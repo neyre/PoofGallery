@@ -5,18 +5,18 @@
       <h2>
         <a href="{{@rootpath}}">{{@sitetitle}}</a>
         <div class="btn-group">
-          <check if="{{@SESSION.userAccessLevel > 0}}">
+          <check if="{{@userAccessLevel > 0}}">
             <a class="btn btn-inverse" data-toggle="dropdown" href='#'>
               User <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <check if="{{@SESSION.userAccessLevel > 7}}">
+              <check if="{{@userAccessLevel > 7}}">
                 <li><a href='{{@rootpath}}/users'>User Administration</a></li>
               </check>
               <li><a data-toggle="modal" data-target="#changePass" href='#'>Change Password</a></li>
               <li><a href='{{@rootpath}}/logout'>Logout</a></li>
             </ul>
-            <check if="{{@SESSION.userAccessLevel > 4}}">
+            <check if="{{@userAccessLevel > 4}}">
               <a class="btn btn-success" href='{{@rootpath}}/{{@PARAMS.album}}/organize'><i class="icon-th icon-white"></i> Organize Album</a>
             </check>
             <a class="btn btn-primary" href='{{@rootpath}}/{{@PARAMS.album}}/upload'><i class="icon-plus icon-white"></i> Upload Photos Here</a>
@@ -52,7 +52,10 @@
   <repeat group="{{@albums}}" value="{{@item}}" counter="{{@counter}}">
     <div class='span3 ptile'>
       <a href="{{@rootpath}}/{{@item.id}}" class='thumbnail'>
-        <img src="{{@rootpath}}/img/{{@item.albumcover}}/thumb">
+        <check if="{{@item.albumcover}}">
+          <false><img src="{{@rootpath}}/blank"></false>
+          <true><img src="{{@fullmediapath}}/{{@item.albumcover}}-thumb.jpg"></true>
+        </check>
         <true><h5>{{@item.title}}</h5></true>
       </a>
     </div>
@@ -67,7 +70,7 @@
   <repeat group="{{@photos}}" value="{{@item}}">
     <div class='span3 ptile'>
       <a href=# id='{{@item.id}}' class='thumbnail'>
-        <img src="{{@rootpath}}/img/{{@item.id}}/thumb">
+        <img src="{{@fullmediapath}}/{{@item.id}}-thumb.jpg">
       </a>
     </div>
   </repeat>
@@ -88,7 +91,7 @@
 
 <exclude> INCLUDE NECESSARY MODAL SNIPS </exclude>
 <include href="snips/gallery.htm" />
-<check if="{{@SESSION.userAccessLevel < 1}}">
+<check if="{{@userAccessLevel < 1}}">
   <true>
     <include href="snips/login.htm" />
     <script src="{{@rootpath}}/static/js/gallery,login"></script>

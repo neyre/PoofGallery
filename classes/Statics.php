@@ -2,16 +2,16 @@
 
 // PoofGallery
 // Static Content (CSS, JS, Help Page, etc.) Class
-// 
+//
 // The contents of this file are subject to the terms of the GNU General
 // Public License Version 3.0. You may not use this file except in
 // compliance with the license. Any of the license terms and conditions
 // can be waived if you get permission from the copyright holder.
-// 
+//
 // Copyright 2012 Nick Eyre
 // Nick Eyre - nick@nickeyre.com
-// 
-// Version 1.0.1
+//
+// Version 2.0.0
 
 class Statics{
 
@@ -67,6 +67,11 @@ class Statics{
       $input = array($input);
     foreach($input as $item)
       echo Template::serve('/static/'.$item);
+  }
+
+  // Create Placeholder Thumbnail (GET)
+  static function placeholderImage(){
+    Graphics::fakeimage(F3::get('thumbsize.0'),F3::get('thumbsize.1'));
   }
 }
 ?>

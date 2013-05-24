@@ -1,10 +1,9 @@
 # Enable rewrite engine and route requests to framework
-RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-l
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule .* /index.php [L,QSA]
+# Block Access to Any Files Besides Index.php & Images
+RewriteEngine on
+RewriteRule ^(images) - [L]
+RewriteCond $1 !^(index\.php)
+RewriteRule ^(.*)$ /index.php/$1 [L]
 
 # Disable ETags
 <IfModule mod_headers.c>
@@ -16,4 +15,9 @@ RewriteRule .* /index.php [L,QSA]
 <IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresDefault A604800
+</IfModule>
+
+# Enable Session Auto-Start
+<IfModule mod_php5.c>
+  php_flag session.auto_start on
 </IfModule>
