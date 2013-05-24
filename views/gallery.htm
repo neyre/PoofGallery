@@ -19,7 +19,9 @@
             <check if="{{@userAccessLevel > 4}}">
               <a class="btn btn-success" href='{{@rootpath}}/{{@PARAMS.album}}/organize'><i class="icon-th icon-white"></i> Organize Album</a>
             </check>
-            <a class="btn btn-primary" href='{{@rootpath}}/{{@PARAMS.album}}/upload'><i class="icon-plus icon-white"></i> Upload Photos Here</a>
+            <check if="{{@userAccessLevel > 1}}">
+              <a class="btn btn-primary" href='{{@rootpath}}/{{@PARAMS.album}}/upload'><i class="icon-plus icon-white"></i> Upload Photos Here</a>
+            </check>
             <false><a class="btn btn-primary" data-toggle="modal" data-target="#login"><i class="icon-user icon-white"></i> Login</a></false>
 
           </check>
