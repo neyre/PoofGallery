@@ -410,7 +410,7 @@ class Item{
     // Create & Return New Item
     $item->reset();
     $item->id               = $id;
-    $item->creator          = F3::get('SESSION.username');
+    $item->creator          = F3::get('username');
     $item->title            = '';
     $item->albumcover       = 0;
     $item->albumcoverparent = 0;
